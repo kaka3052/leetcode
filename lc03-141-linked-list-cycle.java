@@ -28,7 +28,7 @@
 // Explanation: There is no cycle in the linked list.
 
 // Follow up:
-// Can you solve it using O(1) (i.e. constant) memory?
+// Can you solve it using O(1) (i.e. constant) memory?//not use new Set
 
 
 /**
@@ -43,15 +43,35 @@
  * }
  */
 public class Solution {
-    Set s = new HashSet();
+    // Set s = new HashSet();
+    // public boolean hasCycle(ListNode head) {
+    //     if ( head == null ) return false;
+    //     if (s.contains(head)){
+    //         return true;
+    //     }else{
+    //         s.add(head);
+    //     }
+    //     return hasCycle(head.next);
+    // }
+
     public boolean hasCycle(ListNode head) {
-        if ( head == null ) return false;
-        if (s.contains(head)){
-            return true;
-        }else{
-            s.add(head);
+
+        ListNode prev = null;
+        ListNode a = head;
+        ListNode b = head;
+        while(a != null && b !=null){
+
+            a = a.next;
+            if(b.next!=null){
+                b = b.next.next;    
+            }else{
+                return false;
+            }
+            if (a == b){
+                return true;
+            }
         }
-        return hasCycle(head.next);
+        return false;
     }
 }
 

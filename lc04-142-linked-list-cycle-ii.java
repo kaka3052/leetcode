@@ -49,6 +49,36 @@
  */
 public class Solution {
     public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode meet = null;
+        while(fast != null){
+            slow = slow.next;
+            fast = fast.next;
+            if(fast == null){
+                return null;
+            }
+            fast = fast.next;
+            if(fast == slow){
+                meet = fast;
+                break;
+            }
+        }
+        if(meet == null){
+            return null;
+        }
+        while(head != null){
+            if(head == meet){
+                return head;
+            }
+            head = head.next;
+            meet = meet.next;//I don't understand this 
+        }
+        return null;
+    }
+
+
+    public ListNode detectCycle1(ListNode head) {
         // if (head == null) return false
         
         
@@ -61,11 +91,13 @@ public class Solution {
             slow=slow.next;
             fast=fast.next.next;
             if(slow==fast){
+                //clean list after slow
                 while(slow!=null){
                     fast = slow.next;
                     slow.next=null;
                     slow = fast;
-                }               
+                }
+                // so head chane shorter than before
                 while(head.next!=null){
                     head = head.next;
                 }
@@ -75,4 +107,3 @@ public class Solution {
         return null;
     }
 }
-
