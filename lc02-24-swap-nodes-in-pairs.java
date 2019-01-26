@@ -7,7 +7,6 @@
 // Your algorithm should use only constant extra space.
 // You may not modify the values in the list's nodes, only nodes itself may be changed.
 
-
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -18,7 +17,6 @@
  */
 class Solution {
     public ListNode swapPairs(ListNode head) {
-        
         ListNode prev = null;
         ListNode cur = head;
         ListNode res = head.next;
@@ -30,10 +28,14 @@ class Solution {
 
             //reverse a b
             a.next = c;
-            b.next = prev;
-            prev = cur;
+            b.next = a;
+            // need deal with prev
+            if(prev != null){
+                prev.next = b;
+            }
+            prev = a;
             cur = c;
         }
-        return res;
+        return res;        
     }
 }
