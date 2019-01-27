@@ -1,65 +1,49 @@
-// 25. Reverse Nodes in k-Group
-// Hard
+// 703. Kth Largest Element in a Stream
+// Easy
 
-// Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
+// Design a class to find the kth largest element in a stream. Note that it is the kth largest element in the sorted order, not the kth distinct element.
 
-// k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+// Your KthLargest class will have a constructor which accepts an integer k and an integer array nums, which contains initial elements from the stream. For each call to the method KthLargest.add, return the element representing the kth largest element in the stream.
 
 // Example:
 
-// Given this linked list: 1->2->3->4->5
+// int k = 3;
+// int[] arr = [4,5,8,2];
+// KthLargest kthLargest = new KthLargest(3, arr);
+// kthLargest.add(3);   // returns 4
+// kthLargest.add(5);   // returns 5
+// kthLargest.add(10);  // returns 5
+// kthLargest.add(9);   // returns 8
+// kthLargest.add(4);   // returns 8
+// Note: 
+// You may assume that nums' length ≥ k-1 and k ≥ 1.
 
-// For k = 2, you should return: 2->1->4->3->5
+class KthLargest {
 
-// For k = 3, you should return: 3->2->1->4->5
-
-// Note:
-
-// Only constant extra memory is allowed.
-// You may not alter the values in the list's nodes, only nodes itself may be changed.
-
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
-class Solution {
-    public ListNode reverseKGroup(ListNode head, int k) {
-        return reverseGroup(null, head, k); 
+    final PriorityQueue<Integer> q;
+    final int k;
+    
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        q = new PriorityQueue<Integer>(k);
+        for(int i = 0; i < nums.length; i++){
+            add(nums[i]);
+        }
     }
     
-    public ListNode reverseGroup(ListNode prevFromLastGroup, ListNode head, int k){
-        if (head == null){
-            return null;
+    public int add(int val) {
+        if (q.size() < k){
+            q.offer(val); // stack.push
+        }else if (q.peek() < val){
+            q.poll();     // stack.pop
+            q.offer(val); 
         }
-        ListNode prev = prevFromLastGroup;
-        ListNode cur = head;
-        
-        int i = 1;
-        
-        while(i <= k && cur != null){
-            if (cur.next != null){
-                if (i == k){//the kth node
-                    head.next = cur.next;
-                    reverseGroup(cur, cur.next, k);
-                    return cur;
-                }else{
-                    ListNode next = cur.next;  
-                    cur.next = prev;
-                    prev = cur;
-                    cur = next;              
-                    i++;    
-                }
-            }              
-        }
-        if (i < k){
-            return reverseGroup(prevFromLastGroup, prev, i);
-        }else{
-            return null;
-        }
-        
+        return q.peek();
     }
 }
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest obj = new KthLargest(k, nums);
+ * int param_1 = obj.add(val);
+ */

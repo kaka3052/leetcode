@@ -1,65 +1,63 @@
-// 25. Reverse Nodes in k-Group
+// 239. Sliding Window Maximum
 // Hard
 
-// Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
-
-// k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+// Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position. Return the max sliding window.
 
 // Example:
 
-// Given this linked list: 1->2->3->4->5
+// Input: nums = [1,3,-1,-3,5,3,6,7], and k = 3
+// Output: [3,3,5,5,6,7] 
+// Explanation: 
 
-// For k = 2, you should return: 2->1->4->3->5
+// Window position                Max
+// ---------------               -----
+// [1  3  -1] -3  5  3  6  7       3
+//  1 [3  -1  -3] 5  3  6  7       3
+//  1  3 [-1  -3  5] 3  6  7       5
+//  1  3  -1 [-3  5  3] 6  7       5
+//  1  3  -1  -3 [5  3  6] 7       6
+//  1  3  -1  -3  5 [3  6  7]      7
+// Note: 
+// You may assume k is always valid, 1 ≤ k ≤ input array's size for non-empty array.
 
-// For k = 3, you should return: 3->2->1->4->5
+// Follow up:
+// Could you solve it in linear time?
 
-// Note:
-
-// Only constant extra memory is allowed.
-// You may not alter the values in the list's nodes, only nodes itself may be changed.
-
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
 class Solution {
-    public ListNode reverseKGroup(ListNode head, int k) {
-        return reverseGroup(null, head, k); 
+    PriorityQueue<Integer> q;
+    int k;
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (k == 0){
+            return nums;
+        }
+        this.k = k;
+        this.q = new PriorityQueue(k, 
+             new Comparator<Integer>(){
+                 public int compare(Integer a, Integer b){
+                     return b - a;
+                 }
+             });
+        
+        int[] result = new int[nums.length - k + 1];
+        for(int i = 0; i < nums.length; i++){
+            
+            if (i < k - 1){
+                add(nums, i);
+            }else{//i >= k-1
+                result[i - k + 1] = add(nums, i);
+            }
+        }
+        
+        return result;
+        
     }
-    
-    public ListNode reverseGroup(ListNode prevFromLastGroup, ListNode head, int k){
-        if (head == null){
-            return null;
+    public int add(int[] nums, int i){
+        if (q.size() < k){
+            q.offer(nums[i]);
+        }else {
+            q.remove(nums[i - k]);
+            q.offer(nums[i]);
         }
-        ListNode prev = prevFromLastGroup;
-        ListNode cur = head;
-        
-        int i = 1;
-        
-        while(i <= k && cur != null){
-            if (cur.next != null){
-                if (i == k){//the kth node
-                    head.next = cur.next;
-                    reverseGroup(cur, cur.next, k);
-                    return cur;
-                }else{
-                    ListNode next = cur.next;  
-                    cur.next = prev;
-                    prev = cur;
-                    cur = next;              
-                    i++;    
-                }
-            }              
-        }
-        if (i < k){
-            return reverseGroup(prevFromLastGroup, prev, i);
-        }else{
-            return null;
-        }
-        
+        return q.peek();
     }
 }

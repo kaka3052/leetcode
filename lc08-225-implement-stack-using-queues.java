@@ -1,65 +1,66 @@
-// 25. Reverse Nodes in k-Group
-// Hard
+// 225. Implement Stack using Queues
+// Easy
 
-// Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
 
-// k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+// Implement the following operations of a stack using queues.
 
+// push(x) -- Push element x onto stack.
+// pop() -- Removes the element on top of the stack.
+// top() -- Get the top element.
+// empty() -- Return whether the stack is empty.
 // Example:
 
-// Given this linked list: 1->2->3->4->5
+// MyStack stack = new MyStack();
 
-// For k = 2, you should return: 2->1->4->3->5
+// stack.push(1);
+// stack.push(2);  
+// stack.top();   // returns 2
+// stack.pop();   // returns 2
+// stack.empty(); // returns false
+// Notes:
 
-// For k = 3, you should return: 3->2->1->4->5
+// You must use only standard operations of a queue -- which means only push to back, peek/pop from front, size, and is empty operations are valid.
+// Depending on your language, queue may not be supported natively. You may simulate a queue by using a list or deque (double-ended queue), as long as you use only standard operations of a queue.
+// You may assume that all operations are valid (for example, no pop or top operations will be called on an empty stack).
 
-// Note:
-
-// Only constant extra memory is allowed.
-// You may not alter the values in the list's nodes, only nodes itself may be changed.
-
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
-class Solution {
-    public ListNode reverseKGroup(ListNode head, int k) {
-        return reverseGroup(null, head, k); 
+class MyStack {
+    
+    private List a;
+    /** Initialize your data structure here. */
+    public MyStack() {
+        a = new ArrayList();
     }
     
-    public ListNode reverseGroup(ListNode prevFromLastGroup, ListNode head, int k){
-        if (head == null){
-            return null;
-        }
-        ListNode prev = prevFromLastGroup;
-        ListNode cur = head;
-        
-        int i = 1;
-        
-        while(i <= k && cur != null){
-            if (cur.next != null){
-                if (i == k){//the kth node
-                    head.next = cur.next;
-                    reverseGroup(cur, cur.next, k);
-                    return cur;
-                }else{
-                    ListNode next = cur.next;  
-                    cur.next = prev;
-                    prev = cur;
-                    cur = next;              
-                    i++;    
-                }
-            }              
-        }
-        if (i < k){
-            return reverseGroup(prevFromLastGroup, prev, i);
-        }else{
-            return null;
-        }
-        
+    /** Push element x onto stack. */
+    public void push(int x) {
+        a.add(x);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        // loop a, reverse a to b, pop b, then revers b to a.
+        int result = (int)a.get(a.size()-1);
+        a.remove(a.size()-1);
+        return result;
+    }
+    
+    /** Get the top element. */
+    public int top() {
+        int result = (int)a.get(a.size()-1);
+        return result;
+    }
+    
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        return a.isEmpty();
     }
 }
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * boolean param_4 = obj.empty();
+ */
